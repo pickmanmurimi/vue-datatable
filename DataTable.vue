@@ -141,13 +141,13 @@
 				<div class="col-md-6" v-if="paginate">
 					<ul class="pagination" v-if="paginateLinks.length">
 						<li class="page-item" v-if="pages && currentPage != 1">
-							<span class="page-link" @click="prev">Prev</span>
+							<span class="page-link" @click="prev">{{ PrevText }}</span>
 						</li>
 						<li class="page-item" v-bind:key="item.page" v-for="item in paginateLinks" :class="{active: currentPage == item.page}">
 							<span class="page-link" @click="paginate(item.page)">{{ item.page }}</span>
 						</li>
 						<li class="page-item" v-if="pages && currentPage < pages">
-							<span class="page-link" @click="next">Next</span>
+							<span class="page-link" @click="next">{{ NextText }}</span>
 						</li>
 					</ul>
 				</div>
@@ -288,6 +288,18 @@ export default {
 		selectable: {
 			type: Boolean,
 			default: () => false
+		},
+		
+		//set previous pagination control text
+		PrevText: {
+			type: String,
+			default : 'Prev'
+		},
+		
+		//set next pagination control text
+		NextText: {
+			type: String,
+			deafult : 'Next'
 		}
 	},
 	methods: {
