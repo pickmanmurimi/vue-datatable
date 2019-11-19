@@ -185,6 +185,11 @@ it passess three arguments to the provided function
   }
 }
 ```
+#### nextText
+Sets test for the next pagigantion button can take html code for icons :)
+
+#### prevText
+Sets test for the previous pagigantion button can take html code for icons :)
 
 #### columns
 Columns and Appropriate Data Assigment
