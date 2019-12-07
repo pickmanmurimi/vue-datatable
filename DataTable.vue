@@ -300,6 +300,10 @@ export default {
 		nextText: {
 			type: String,
 			default : () => 'Next'
+		},
+		//items per page to show
+		perPage: {
+			default : () => null
 		}
 	},
 	methods: {
@@ -618,6 +622,11 @@ export default {
 	},
 	// Lifetime Events
 	async mounted() {
+        //get items per page
+        if( this.perPage !== null)
+        {
+            this.itemsPerPage = this.perPage
+        }
 		// Parse Headers 
 		this.getHeaders();
 
