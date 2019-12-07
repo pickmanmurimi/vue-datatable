@@ -114,6 +114,7 @@ Here's how you would use it in Example.vue
 |   limitable  |  Whether Or Not Page Limitation Should Be Changeable     |   Boolean     |   true    |
 |   pageDetails  |  Whether Or Not Details Should Be Visible          |   Boolean     |   true    |
 |   paginatable  |  Whether Or Not The Results Should Be paginatable      |   Boolean     |   true    |
+|   perPage  |  default items per page      |   Integer     |   null    |
 
 
 
@@ -228,6 +229,9 @@ default: ```true```
 
 #### loading
 Set Loading Status
+<br/>
+#### perPage
+default items per page
 <br/>
 whenever this property changes the state will as well
 <br/>
