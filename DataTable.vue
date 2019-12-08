@@ -632,8 +632,8 @@ export default {
 
 		// Set Default Sorting To Index
 		// Asc will be converted to false so order will be in reverse
-		this.asc = true;
-		this.sortIndex( true );
+		this.asc = false;
+		this.sortIndex();
 
 		// Use Provided Data If Ajax Is Not Specified 
 		if (!this.ajax) {
