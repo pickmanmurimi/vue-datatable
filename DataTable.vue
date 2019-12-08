@@ -410,7 +410,7 @@ export default {
 			this.renderedItems = this.renderedItems.sort((a, b) => {
 				var indexA = a.index;
 				var indexB = b.index;
-				return indexA > indexB ? 1 : -1;
+				return indexB > indexA ? 1 : -1;
 			});
 			this.asc = this.sortColumn == '#' ? !this.asc : true;
 
