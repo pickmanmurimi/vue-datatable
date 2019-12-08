@@ -306,7 +306,7 @@ export default {
 			default : () => null
         },
         // Index Sort Order
-		IndexsortOrder: {
+		IndexSortOrder: {
             type: String,
             default : () => "asc"
         }
@@ -637,7 +637,7 @@ export default {
 
 		// Set Default Sorting To Index
 		// Asc will be converted to false so order will be in reverse
-		this.asc = (IndexsortOrder == "asc") ? true : false ;
+		this.asc = (this.IndexSortOrder == "asc") ? true : false ;
 		this.sortIndex();
 
 		// Use Provided Data If Ajax Is Not Specified 
