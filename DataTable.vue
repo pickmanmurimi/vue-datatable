@@ -304,12 +304,12 @@ export default {
 		//items per page to show
 		perPage: {
 			default : () => null
-        	},
-        	// Index Sort Order
+        },
+        // Index Sort Order
 		IndexsortOrder: {
-            		type: String,
-            		default : () => "asc",
-        	}
+            type: String,
+            default : () => "asc"
+        }
 	},
 	methods: {
 		// Navigate To Provided Page
@@ -637,7 +637,7 @@ export default {
 
 		// Set Default Sorting To Index
 		// Asc will be converted to false so order will be in reverse
-		this.asc = IndexsortOrder == "asc" ? true : false ;
+		this.asc = (IndexsortOrder == "asc") ? true : false ;
 		this.sortIndex();
 
 		// Use Provided Data If Ajax Is Not Specified 
