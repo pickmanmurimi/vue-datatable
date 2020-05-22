@@ -374,6 +374,8 @@ export default {
 			Axios.get(url)
 			.then(response => {
 					if (!response.data.data) {
+					this.ajaxLoading = false;
+
 						return this.error("Unable To Parse Data");
 					}
 					this.items = response.data.data;
@@ -383,13 +385,15 @@ export default {
 						this.links = response.data.links
 						this.meta = response.data.meta
 					}
+					
+					this.ajaxLoading = false;
 
 					this.success("Data Loaded");
 				})
 				.catch(error => {
+					this.ajaxLoading = false;
 					this.error(error || "Unable To Load Data");
 				});
-			this.ajaxLoading = false;
 		},
 
 		// Search Through Items With Provided Search Query
