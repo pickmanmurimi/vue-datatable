@@ -357,9 +357,8 @@ export default {
 		getItemsFromAjax( url )
 		{
 			this.ajaxLoading = true;
-			await Axios
-				.get(url)
-				.then(response => {
+			Axios.get(url)
+			.then(response => {
 					if (!response.data.data) {
 						return this.error("Unable To Parse Data");
 					}
