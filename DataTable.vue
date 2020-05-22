@@ -159,9 +159,9 @@
 						<li class="page-item" v-if="links.prev">
 							<span class="page-link" @click="prev" v-html="prevText">{{prevText}}</span>
 						</li>
-						<!-- <li class="page-item" v-bind:key="item.page" v-for="item in paginateLinks" :class="{active: currentPage == item.page}">
+						<li class="page-item" v-bind:key="item.page" v-for="item in paginateLinks" :class="{active: currentPage == item.page}">
 							<span class="page-link" @click="paginate(item.page)">{{ item.page }}</span>
-						</li> -->
+						</li>
 						<li class="page-item" v-if="links.next">
 							<span class="page-link" @click="next" v-html="nextText"> {{nextText}} </span>
 						</li>
@@ -337,7 +337,12 @@ export default {
 		// Arguments
 		// 	Page: int
 		paginate(page) {
-			this.currentPage = page;
+			if( this.ajaxPaginated )
+			{
+				this.getItemsFromAjax( this.url + `?page=${ page }` )
+			} else {
+				this.currentPage = page;
+			}
 		},
 		// Navigate To Next Page
 		next() {
@@ -636,7 +641,14 @@ export default {
 		paginateLinks() {
 			var links = [];
 			var approved = [];
-			let center = Math.round(this.pages / 2) - 1 ;
+
+			if( this.ajaxPaginated )
+			{
+				let center = Math.round(this.last_page / 2) - 1 ;
+			} else {
+				let center = Math.round(this.pages / 2) - 1 ;
+			}
+
 			for (var i = 0; i < this.pages; i++) {
 				if (this.pages > 6) {
 					let difference = this.currentPage - i;
