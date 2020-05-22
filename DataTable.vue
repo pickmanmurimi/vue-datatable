@@ -154,7 +154,7 @@
 					</ul>
 				</div>
 				<!-- ajax pagination -->
-				<div class="col-md-6" v-if="ajaxPaginated">
+				<div class="col-12" v-if="ajaxPaginated">
 					<ul class="pagination d-flex justify-content-center">
 						<li class="page-item" v-if="links.prev">
 							<span class="page-link" @click="prev" v-html="prevText">{{prevText}}</span>
