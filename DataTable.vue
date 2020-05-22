@@ -154,7 +154,7 @@
 					</ul>
 				</div>
 				<!-- ajax pagination -->
-				<div v-if="ajaxPaginated">
+				<div class="col-md-6" v-if="ajaxPaginated">
 					<ul class="pagination">
 						<li class="page-item" v-if="links.prev">
 							<span class="page-link" @click="prev" v-html="prevText">{{prevText}}</span>
