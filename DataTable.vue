@@ -137,7 +137,7 @@
 						{{ (itemsPerPage * (currentPage -1 )) + paginatedItems.length }}
 						of
 						<!-- All Items Provided -->
-						{{ renderedItems.length }} items
+						{{ meta.total ? meta.total : renderedItems.length }} items
 					</div>
 				</div>
 				<div class="col-md-6" v-if="paginate || ! ajaxPaginated">
