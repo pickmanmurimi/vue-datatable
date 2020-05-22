@@ -644,7 +644,7 @@ export default {
 
 			if( this.ajaxPaginated )
 			{
-				let center = Math.round(this.last_page / 2) - 1 ;
+				let center = Math.round(this.meta.last_page / 2) - 1 ;
 			} else {
 				let center = Math.round(this.pages / 2) - 1 ;
 			}
