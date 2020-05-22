@@ -1,8 +1,9 @@
-<!-- 
-	Vue Datatable 
+<!--
+	Vue Datatable
 	Description: Vue Component for datatable with search, sorting, editing and pagination
-	Author: Antonio Okoro 
-	Version: 1.0.0 
+	Author: Antonio Okoro
+	Forked By: Pickman Murimi
+	Version: 1.0.0
 -->
 <template>
 	<div class="data-table">
@@ -15,7 +16,7 @@
 				<div class="col-md-6" v-if="limitable">
 					<div class="form-group">
 						<label>
-							Show 
+							Show
 							<select  class="custom-select custom-select-sm" v-model="itemsPerPage">
 								<option value="1">1</option>
 								<option value="2">2</option>
@@ -27,7 +28,7 @@
 								<option value="50">50</option>
 								<option value="75">75</option>
 								<option value="100">100</option>
-							</select> 
+							</select>
 							rows
 						</label>
 					</div>
@@ -38,9 +39,9 @@
 					</div>
 				</div>
 				<div class="col-auto ml-auto" v-if="showFilters">
-					Filters: 
+					Filters:
 					<div class="table-filters d-inline-block">
-						<div class="table-filter" v-for="option in filters" @click="filter(option)">
+						<div class="table-filter" v-for="option in filters" @click="filter(option)" :key="option.id">
 							<span>{{ option.title }}</span>
 						</div>
 					</div>
@@ -65,14 +66,15 @@
 								:class="{sort: sortColumn == '#', 'asc': sortColumn == '#' && asc, 'desc': sortColumn == '#' && !asc}"
 							>#</th>
 							<!-- Display All Parsed Headers -->
-							<th 
-								v-bind:key="index" 
-								v-for="(th, index) in headers" 
-								@click="sort(th.name)" 
+							<template
+								v-for="(th, index) in headers" >
+							<th
+								@click="sort(th.name)"
 								class="sortable"
 								:class="{sort: sortColumn == th.name, 'asc': sortColumn == th.name && asc, 'desc': sortColumn == th.name && !asc}"
 								v-if="th.show"
 							>{{ th.th }}</th>
+							</template>
 							<!-- Display Actions If Provided -->
 							<th v-if="actions.length">Actions</th>
 						</tr>
@@ -97,16 +99,16 @@
 								<!-- <component :is="i+'Component'" v-if="value.render"></component> -->
 								<span v-html="td.rendered != null ? td.rendered : '----'"></span>
 							</td>
-							
+
 							<!-- Diplay Actions If Provided -->
 							<td v-if="item.buttons.length">
 								<!-- Loop Through All Provided Actions -->
-								<button 
-									type="button" 
-									class="btn" 
-									:class="`btn-${button.color} btn-${button.size}`" 
-									v-bind:key="j" 
-									v-for="(button, j) in item.buttons" 
+								<button
+									type="button"
+									class="btn"
+									:class="`btn-${button.color} btn-${button.size}`"
+									v-bind:key="j"
+									v-for="(button, j) in item.buttons"
 									@click="button.action(item.row, item.index)"
 									v-if="button.show"
 									:disabled="button.disabled"
@@ -127,13 +129,13 @@
 			<div class="row" v-if="footer">
 				<div class="col-md-6" v-if="pageDetails">
 					<div class="showing">
-						Showing 
+						Showing
 						<!-- Current Page Starting Index -->
-						{{ paginatedItems.length ? (itemsPerPage * (currentPage - 1)) + 1 : 0 }} 
-						to 
+						{{ paginatedItems.length ? (itemsPerPage * (currentPage - 1)) + 1 : 0 }}
+						to
 						<!-- Current Page End Index -->
-						{{ (itemsPerPage * (currentPage -1 )) + paginatedItems.length }}  
-						of 
+						{{ (itemsPerPage * (currentPage -1 )) + paginatedItems.length }}
+						of
 						<!-- All Items Provided -->
 						{{ renderedItems.length }} items
 					</div>
@@ -180,6 +182,10 @@ export default {
 			headers: [],
 			// Mapped Data
 			items: [],
+			// pagination data {links}
+			links:{},
+			// pagination data {meta}
+			meta:{},
 			// Mapped Action Buttons
 			buttons: [],
 			// Loading State For Ajax Requests
@@ -212,8 +218,8 @@ export default {
 			type: Object,
 			default: () => {}
 		},
-		
-		
+
+
 		// Table Items
 		data: {
 			type: Array,
@@ -238,7 +244,7 @@ export default {
 			type: Boolean,
 			default: () => true
 		},
-		// Set Loading Status 
+		// Set Loading Status
 		loading: {
 			type: Boolean,
 			default: () => false
@@ -283,19 +289,25 @@ export default {
 			type: Boolean,
 			default: () => true
 		},
+		// Whether Or Not The Results are paginated form the server
+		// We strongly assume use of laravel pagination style
+		ajaxPaginated: {
+			type: Boolean,
+			default: () => false,
+		},
 
 		// Whether Or Not Items Should Be Selctable
 		selectable: {
 			type: Boolean,
 			default: () => false
 		},
-		
+
 		//set previous pagination control text
 		prevText: {
 			type: String,
 			default : () => 'Prev'
 		},
-		
+
 		//set next pagination control text
 		nextText: {
 			type: String,
@@ -304,7 +316,7 @@ export default {
 		//items per page to show
 		perPage: {
 			default : () => null
-        	}
+        }
 	},
 	methods: {
 		// Navigate To Provided Page
@@ -315,27 +327,65 @@ export default {
 		},
 		// Navigate To Next Page
 		next() {
-			this.currentPage = this.currentPage >= this.renderedItems.length ? 0 : this.currentPage + 1;
+			if( this.ajaxPaginated )
+			{
+				this.getItemsFromAjax( this.links.next )
+			} else {
+				this.currentPage = this.currentPage >= this.renderedItems.length ? 0 : this.currentPage + 1;
+			}
 		},
 		// Navigate To Previous Page
 		prev() {
-			this.currentPage = this.currentPage <= 0 ? this.renderedItems.length : this.currentPage - 1;
+			if( this.ajaxPaginated )
+			{
+				this.getItemsFromAjax( this.links.prev )
+			} else {
+				this.currentPage = this.currentPage <= 0 ? this.renderedItems.length : this.currentPage - 1;
+			}
 		},
 		// Navigate To Last Page
 		end() {
 			this.currentPage = this.renderedItems.length;
 		},
 		// Navigate To First Page
-		start() { 
+		start() {
 			this.currentPage = 1;
 		},
-		// Search Through Items With Provided Search Query 
+		/**
+		 * getItemsFromAjax
+		 */
+		getItemsFromAjax( url )
+		{
+			this.ajaxLoading = true;
+			await Axios
+				.get(url)
+				.then(response => {
+					if (!response.data.data) {
+						return this.error("Unable To Parse Data");
+					}
+					this.items = response.data.data;
+
+					if( this.ajaxPaginated )
+					{
+						this.links = response.data.links
+						this.meta = response.data.meta
+					}
+
+					this.success("Data Loaded");
+				})
+				.catch(error => {
+					this.error(error || "Unable To Load Data");
+				});
+			this.ajaxLoading = false;
+		},
+
+		// Search Through Items With Provided Search Query
 		// Arguments
 		// 	Query: string
 		search(query) {
 			var items = this.mapItems(this.items);
 			let retval = items.filter(item => {
-				
+
 				var found = false;
 				// Search In Mapped Data
 				item.details.forEach(detail => {
@@ -376,18 +426,18 @@ export default {
 		// 	Column: String
 		// 	Order: String [asc, desc]
 		sort(column) {
-			
+
 			this.renderedItems = this.renderedItems.sort((a,b) => {
 				var detailx = a.details.find(detail => detail.name == column);
 				var x = detailx.rendered;
 				if (!x) {
-					
+
 				}
 				x = typeof x == 'string' ? x.toLowerCase() : x;
 				var detaily = b.details.find(detail => detail.name == column);
 				var y = detaily.rendered;
 				if (!x) {
-					
+
 				}
 				y = typeof y == 'string' ? y.toLowerCase() : y;
 				return x > y ? 1 : -1;
@@ -424,7 +474,7 @@ export default {
 					this.renderedItems = this.renderedItems.reverse();
 				}
 			}
-			
+
 			this.sortColumn = '#';
 
 			this.currentPage = 1;
@@ -473,7 +523,7 @@ export default {
 
 				// Get Provided Columns
 				this.columns.forEach((column, index2) => {
-					
+
 					row.details.push({
 						// Item Column Name
 						name:column.name,
@@ -508,7 +558,7 @@ export default {
 				});
 
 				return row;
-			});			
+			});
 			return items;
 		} ,
 		click(row, cell, name, index) {
@@ -547,7 +597,7 @@ export default {
 			}
 		},
 
-		
+
 		// Alerts
 		success(success = "Success") {
 			toastr.success(success);
@@ -627,7 +677,7 @@ export default {
         {
             this.itemsPerPage = this.perPage
         }
-		// Parse Headers 
+		// Parse Headers
 		this.getHeaders();
 
 		// Set Default Sorting To Index
@@ -635,7 +685,7 @@ export default {
 		this.asc = false;
 		this.sortIndex();
 
-		// Use Provided Data If Ajax Is Not Specified 
+		// Use Provided Data If Ajax Is Not Specified
 		if (!this.ajax) {
 			// Map Items From Provided Data
 			this.items = this.data;
@@ -643,20 +693,7 @@ export default {
 			// this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (this.currentPage - 1), (this.itemsPerPage * this.currentPage));
 		}else {
 			// Get Data From Server Using Ajax
-			this.ajaxLoading = true;
-			await Axios
-				.get(this.url)
-				.then(response => {
-					if (!response.data.data) {
-						return this.error("Unable To Parse Data");
-					}
-					this.items = response.data.data;
-					this.success("Data Loaded");
-				})
-				.catch(error => {
-					this.error(error || "Unable To Load Data");
-				});
-			this.ajaxLoading = false;
+			this.getItemsFromAjax( this.url )
 		}
 	}
 }
@@ -690,11 +727,11 @@ export default {
 		&-text
 			font-weight: 300
 			text-trnasform: uppercase
-	
+
 	&-control
 		.custom-select
 			width: initial
-	
+
 	.table
 		&-responsive
 			margin-bottom: 30px
