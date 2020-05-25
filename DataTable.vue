@@ -389,6 +389,7 @@ export default {
 					{
 						this.links = response.data.links
 						this.meta = response.data.meta
+						this.currentPage = this.meta.current_page;
 					}
 					
 					this.ajaxLoading = false;
