@@ -674,11 +674,17 @@ export default {
 	},
 	watch: {
 		currentPage(newValue) {
-			this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (newValue - 1), (this.itemsPerPage * newValue));
+			if( ! this.ajaxPaginated )
+			{
+				this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (newValue - 1), (this.itemsPerPage * newValue));
+			}
 		},
 		itemsPerPage(newValue) {
-			this.currentPage = 1;
-			this.paginatedItems = this.renderedItems.slice(newValue * (this.currentPage - 1), (newValue * this.currentPage));
+			if( ! this.ajaxPaginated )
+			{
+				this.currentPage = 1;
+				this.paginatedItems = this.renderedItems.slice(newValue * (this.currentPage - 1), (newValue * this.currentPage));
+			}
 		},
 		items(newValue) {
 			this.getHeaders();
