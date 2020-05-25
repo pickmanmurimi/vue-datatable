@@ -692,7 +692,10 @@ export default {
 			this.renderedItems = this.mapItems(newValue);
 
 			// Get All Items In Current Page
-			this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (this.currentPage - 1), (this.itemsPerPage * this.currentPage));
+			if( ! this.ajaxPaginated )
+			{
+				this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (this.currentPage - 1), (this.itemsPerPage * this.currentPage));
+			}
 
 			this.asc = true;
 
