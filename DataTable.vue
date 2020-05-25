@@ -146,7 +146,7 @@
 						<li class="page-item" v-if="links.prev">
 							<span class="page-link" @click="prev" v-html="prevText">{{prevText}}</span>
 						</li>
-						<li class="page-item" v-bind:key="item.page" v-for="item in paginateLinks" :class="{active: currentPage == item.page}">
+						<li class="page-item" v-bind:key="item.page" v-for="item in paginateLinks" :class="{active: meta.current_page == item.page}">
 							<span class="page-link" @click="paginate(item.page)">{{ item.page }}</span>
 						</li>
 						<li class="page-item" v-if="links.next">
@@ -389,7 +389,6 @@ export default {
 					{
 						this.links = response.data.links
 						this.meta = response.data.meta
-						this.currentPage = this.meta.current_page;
 					}
 					
 					this.ajaxLoading = false;
@@ -476,7 +475,7 @@ export default {
 			}
 			this.sortColumn = column;
 
-			this.ajaxPaginated ? this.currentPage = this.meta.current_page : this.currentPage = 1;
+			this.currentPage = 1;
 		},
 
 		sortIndex(asc){
@@ -500,7 +499,7 @@ export default {
 
 			this.sortColumn = '#';
 
-			this.ajaxPaginated ? this.currentPage = this.meta.current_page : this.currentPage = 1;
+			this.currentPage = 1;
 		},
 
 		filter(filter){
@@ -674,17 +673,11 @@ export default {
 	},
 	watch: {
 		currentPage(newValue) {
-			if( ! this.ajaxPaginated )
-			{
-				this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (newValue - 1), (this.itemsPerPage * newValue));
-			}
+			this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (newValue - 1), (this.itemsPerPage * newValue));
 		},
 		itemsPerPage(newValue) {
-			if( ! this.ajaxPaginated )
-			{
-				this.currentPage = 1;
-				this.paginatedItems = this.renderedItems.slice(newValue * (this.currentPage - 1), (newValue * this.currentPage));
-			}
+			this.currentPage = 1;
+			this.paginatedItems = this.renderedItems.slice(newValue * (this.currentPage - 1), (newValue * this.currentPage));
 		},
 		items(newValue) {
 			this.getHeaders();
@@ -692,10 +685,7 @@ export default {
 			this.renderedItems = this.mapItems(newValue);
 
 			// Get All Items In Current Page
-			if( ! this.ajaxPaginated )
-			{
-				this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (this.currentPage - 1), (this.itemsPerPage * this.currentPage));
-			}
+			this.paginatedItems = this.renderedItems.slice(this.itemsPerPage * (this.currentPage - 1), (this.itemsPerPage * this.currentPage));
 
 			this.asc = true;
 
