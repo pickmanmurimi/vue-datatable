@@ -476,7 +476,7 @@ export default {
 			}
 			this.sortColumn = column;
 
-			this.currentPage = 1;
+			this.ajaxPaginated ? this.currentPage = this.meta.current_page : this.currentPage = 1;
 		},
 
 		sortIndex(asc){
@@ -500,7 +500,7 @@ export default {
 
 			this.sortColumn = '#';
 
-			this.currentPage = 1;
+			this.ajaxPaginated ? this.currentPage = this.meta.current_page : this.currentPage = 1;
 		},
 
 		filter(filter){
