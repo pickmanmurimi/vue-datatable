@@ -140,19 +140,6 @@
 						{{ meta.total ? meta.total : renderedItems.length }} items
 					</div>
 				</div>
-				<div class="col-md-6" v-if="paginate || ! ajaxPaginated">
-					<ul class="pagination" v-if="paginateLinks.length">
-						<li class="page-item" v-if="pages && currentPage != 1">
-							<span class="page-link" @click="prev" v-html="prevText">{{prevText}}</span>
-						</li>
-						<li class="page-item" v-bind:key="item.page" v-for="item in paginateLinks" :class="{active: currentPage == item.page}">
-							<span class="page-link" @click="paginate(item.page)">{{ item.page }}</span>
-						</li>
-						<li class="page-item" v-if="pages && currentPage < pages">
-							<span class="page-link" @click="next" v-html="nextText"> {{nextText}} </span>
-						</li>
-					</ul>
-				</div>
 				<!-- ajax pagination -->
 				<div class="col-12" v-if="ajaxPaginated">
 					<ul class="pagination d-flex justify-content-center">
@@ -163,6 +150,19 @@
 							<span class="page-link" @click="paginate(item.page)">{{ item.page }}</span>
 						</li>
 						<li class="page-item" v-if="links.next">
+							<span class="page-link" @click="next" v-html="nextText"> {{nextText}} </span>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-6" v-else-if="paginate">
+					<ul class="pagination" v-if="paginateLinks.length">
+						<li class="page-item" v-if="pages && currentPage != 1">
+							<span class="page-link" @click="prev" v-html="prevText">{{prevText}}</span>
+						</li>
+						<li class="page-item" v-bind:key="item.page" v-for="item in paginateLinks" :class="{active: currentPage == item.page}">
+							<span class="page-link" @click="paginate(item.page)">{{ item.page }}</span>
+						</li>
+						<li class="page-item" v-if="pages && currentPage < pages">
 							<span class="page-link" @click="next" v-html="nextText"> {{nextText}} </span>
 						</li>
 					</ul>
