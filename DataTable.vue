@@ -92,7 +92,7 @@
 							</th>
 
 							<!-- Display Index If Requested -->
-							<td v-if="index">{{ ( ajaxPaginated )? ( item.index * 10 * meta.current_page ) + 1 : item.index + 1 }}</td>
+							<td v-if="index">{{ ( ajaxPaginated )? item.index : item.index + 1 }}</td>
 
 							<!-- Display All Parsed Values -->
 							<td v-bind:key="j" v-for="(td, j) in item.details" @click="click(item.row, td.value, td.name, i), columnClick(td.click, item.row, td.value, td.name, i)" v-if="td.show">
