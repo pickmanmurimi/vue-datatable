@@ -631,6 +631,10 @@ export default {
 	computed: {
 		// Total Number Of Pages For Pagination
 		pages() {
+			if( this.ajaxPaginated ) {
+				return this.meta.last_page
+			}
+
 			if (this.renderedItems.length > this.itemsPerPage) {
 				return Math.ceil(this.renderedItems.length / this.itemsPerPage);
 			}else {
@@ -642,12 +646,7 @@ export default {
 			var links = [];
 			var approved = [];
 
-			if( this.ajaxPaginated )
-			{
-				let center = Math.round(this.meta.last_page / 2) - 1 ;
-			} else {
-				let center = Math.round(this.pages / 2) - 1 ;
-			}
+		let center = Math.round(this.pages / 2) - 1 ;
 
 			for (var i = 0; i < this.pages; i++) {
 				if (this.pages > 6) {
