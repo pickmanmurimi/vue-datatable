@@ -110,8 +110,8 @@
 									@click="button.action(item.row, item.index)"
 									v-if="button.show"
 									:disabled="button.disabled"
+                                                                        v-html="text"
 								>
-									{{ button.text }}
 								</button>
 							</td>
 						</tr>
